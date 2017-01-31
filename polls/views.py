@@ -7,9 +7,7 @@ from .models import Choice, Question
 
 def index(request):
     return render(request, 'polls/index.html', {
-        'hoge': 'test',
-        'fuga': '<br></br>',
-        'piyo': mark_safe('<br>aaa</br>'),
+        'questions': Question.objects.all(),
     })
 
 def detail(request, question_id):
