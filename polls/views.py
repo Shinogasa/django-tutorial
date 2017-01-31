@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from .models import Choice, Question
 
 def index(request):
-    return HttpResponse("hello")
+    return render(request, 'polls/index.html')
 
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
