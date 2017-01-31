@@ -1,11 +1,16 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
+from django.utils.html import mark_safe
 
 from .models import Choice, Question
 
 def index(request):
-    return render(request, 'polls/index.html')
+    return render(request, 'polls/index.html', {
+        'hoge': 'test',
+        'fuga': '<br></br>',
+        'piyo': mark_safe('<br>aaa</br>'),
+    })
 
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
