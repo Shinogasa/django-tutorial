@@ -10,9 +10,10 @@ def index(request):
         'questions': Question.objects.all(),
     })
 
-def detail(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, 'polls/results.html', {'question': question})
+def detail(request, pk):
+    return render(request, 'polls/detail.html', {
+        'question': Question.objects.get(pk=pk)
+    })
 
 def results(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
