@@ -1,9 +1,18 @@
-{% if latest_question_list %}
-    <ul>
-    {% for question in latest_question_list %}
-        <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
+<html>
+<body>
+    <table border="1">
+        <tr>
+            <th>質問内容</th>
+            <th>公開日</th>
+            <th></th>
+        </tr>
+        {% for question in questions %}
+        <tr>
+            <td>{{ question.question_text }}</td>
+            <td>{{ question.pub_date }}</td>
+            <td><a href="{% url 'poll_detail' question.pk %}">詳細画面へ</a></td>
+        </tr>
         {% endfor %}
-    </ul>
-{% else %}
-    <p>No polls are available.</p>
-{% endif %}
+    </table>
+</body>
+</html>

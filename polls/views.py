@@ -1,19 +1,20 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, Http404
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
+from django.utils.html import mark_safe
 
 from .models import Choice, Question
 
 def index(request):
-    latest_question_list = Question.objects.order_by('-pub_date')[:5]
-    context = {
-        'latest_question_list': latest_question_list,
-    }
-    return HttpResponse(request, 'polls/index.htmk', context)
+    return render(request, 'polls/index.html', {
+        'questions': Question.objects.all(),
+    })
 
-def detail(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, 'polls/results.html', {'question': question})
+def detail(request, pk):
+    obj = get_object_or_404(Question, pk=pk)
+    return render(request, 'polls/detail.html', {
+        'question': obj,
+    })
 
 def results(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
