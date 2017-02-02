@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, render, Http404, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from django.utils.html import mark_safe
@@ -16,9 +16,9 @@ def detail(request, pk):
         'question': obj,
     })
 
-def results(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, 'polls/results.html', {'question': question})
+def results(request, pk):
+    obj = get_object_or_404(Question, pk=pk)
+    return render(request, 'polls/results.html', {'question': obj,})
 
 def vote(request, pk):
     question = get_object_or_404(Question, pk=pk)
@@ -27,9 +27,9 @@ def vote(request, pk):
     except (KeyError, Choice.DoesNotExist):
         return render(request, 'polls/detail.html', {
             'question': question,
-            'error_message': "You didn't select a choice"
+            'error_message': "You didn't select a choice",
         })
     else:
         selected_choice.votes += 1
         selected_choice.save()
-        return redirect('index')
+        return redirect('polls_results',pk)
