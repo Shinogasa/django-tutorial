@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.utils.html import mark_safe
 
 from .models import Choice, Question
+from .forms import MyForm
 
 def index(request):
     return render(request, 'polls/index.html', {
@@ -18,7 +19,9 @@ def detail(request, pk):
 
 def results(request, pk):
     obj = get_object_or_404(Question, pk=pk)
-    return render(request, 'polls/results.html', {'question': obj,})
+    return render(request, 'polls/results.html', {
+        'question': obj,
+    })
 
 def vote(request, pk):
     question = get_object_or_404(Question, pk=pk)
@@ -32,4 +35,10 @@ def vote(request, pk):
     else:
         selected_choice.votes += 1
         selected_choice.save()
-        return redirect('polls_results',pk)
+        return redirect('index')
+
+def form_test(request):
+    form = MyForm()
+    return render(request, 'polls/form.html', {
+        'form': form,
+    })
