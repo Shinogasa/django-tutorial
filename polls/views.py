@@ -14,7 +14,7 @@ def index(request):
 class Detail(SingleObjectMixin, FormView):
     model = Question
     form_class = VoteForm
-    context_object_name - 'question'
+    context_object_name = 'question'
     template_name = 'polls/detail.html'
 
     def get(self, request, *args, **kwargs):
