@@ -1,7 +1,7 @@
-from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponseRedirect, HttpResponse
-from django.core.urlresolvers import reverse
-from django.utils.html import mark_safe
+from django.shortcuts import get_object_or_404, render, resolve_url
+from django.core.urlresolvers import reverse_lazy
+from django.views.generic import FormView
+from django.views.generic.detail import SingleObjectMixin
 
 from .models import Question
 from .forms import MyForm, VoteForm
@@ -11,33 +11,42 @@ def index(request):
         'questions': Question.objects.all(),
     })
 
-def detail(request, pk):
-    obj = get_object_or_404(Question, pk=pk)
-    if request.method == "POST":
-        form = VoteForm(question=obj, data=request.POST)
-        if form.is_valid():
-            form.vote()
-            return redirect('polls:results', pk)
-    else:
-        form = VoteForm(question=obj)
-    return render(request, 'polls/detail.html', {
-        'form': form,
-        'question': obj,
-    })
+class Detail(SingleObjectMixin, FormView):
+    model = Question
+    form_class = VoteForm
+    context_object_name - 'question'
+    template_name = 'polls/detail.html'
 
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().get(requestm *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        return super().post(request, *args, **kwargs)
+
+    def get_from_kwargs(self):
+        kwargs = super().get_from_kwargs()
+        kwargs['question'] = self.object
+        return kwargs
+
+    def from_valid(self, form):
+        form.vote()
+        return super(),form_valid(form)
+
+    def get_success_url(self):
+        return resolve_url('polls:results', self.kwargs['pk'])
+
+detail = Detail.as_view()
 def results(request, pk):
     obj = get_object_or_404(Question, pk=pk)
     return render(request, 'polls/results.html', {
         'question': obj,
     })
 
-def form_test(request):
-    if request.method == "POST":
-        form = MyForm(data=request.POST)
-        if form.is_valid():
-            pass
-    else:
-        form = MyForm()
-    return render(request, 'polls/form.html', {
-        'form': form,
-    })
+class FormTest(FormView):
+    form_class = MyForm
+    template_name = 'polls/form.html'
+    success_url = reverse_lazy('polls:index')
+
+form_test = FormTest.as_view()
