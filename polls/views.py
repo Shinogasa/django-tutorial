@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import FormView
 from django.views.generic.detail import SingleObjectMixin
+from django.contrib import messages
 
 from .forms import MyForm
 from .forms import VoteForm
@@ -45,6 +46,8 @@ class Detail(SingleObjectMixin, FormView):
 
     def form_valid(self, form):
         form.vote()
+        choice = form.cleaned_data['choice']
+        messages.success(self.request, '"%s"に投票しました' % choice)
         return super().form_valid(form)
 
     def get_success_url(self):
