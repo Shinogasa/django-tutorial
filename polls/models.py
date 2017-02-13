@@ -12,6 +12,10 @@ class Question(models.Model):
 
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')
+    
+    @classmethod
+    def get_published_data(cls):
+        return cls.objects.filter(pub_date__lte=timezone.now())
 
     def __str__(self):
         return self.question_text
